@@ -1,0 +1,32 @@
+'***************************************************************************
+' VBScript Source File --java.wsf
+' AUTHOR: Cameron Alexander
+' DATE  : 03/10/2014
+' COMMENT: java Comment Section
+' v1.00 03/09/14  initial script
+'****************************************************************************
+<package>
+	<job id="java">
+		<script language="VBScript" src="c:\program files\JNG\vbslibrary\library.vbs"/>
+		<script language="VBScript">
+			Call instWshShell
+			Call instoFS 
+		
+			
+			Set oFile = OFS.CreateTextFile("c:\windows\logs\VBjava.log", True)
+			if Err.Number <> 0 Then
+				wscript.echo "Error Opening file"
+				on error goto 0
+				err.clear
+			end if
+			on error goto 0
+		
+	
+			'insert Software installation here
+			oFile.writeline "Installing SUN Java JRE 7 Update 51"
+			Wscript.Echo "Installing SUN Java JRE 7 Update 51"
+			WshShell.Run """NETWORK\java\java.exe "" /s /qn",0,TRUE
+		</script>
+	</job>
+</package>
+		

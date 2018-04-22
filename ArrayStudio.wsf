@@ -1,0 +1,31 @@
+'***************************************************************************
+' VBScript Source File --ArrayStudio.wsf
+' AUTHOR: Cameron Alexander
+' DATE  : 04/11/2014
+' COMMENT: Template Comment Section
+' v1.00 04/11/14  initial script
+'****************************************************************************
+<package>
+	<job id="Template">
+		<script language="VBScript" src="c:\program files\JNG\vbslibrary\library.vbs"/>
+		<script language="VBScript">
+			Call instWshShell
+			Call instoFS 
+		
+			
+			Set oFile = OFS.CreateTextFile("c:\windows\logs\ArrayStudio.log", True)
+			if Err.Number <> 0 Then
+				wscript.echo "Error Opening file"
+				on error goto 0
+				err.clear
+			end if
+			on error goto 0
+		
+	
+			'insert Software installation here
+			oFile.writeline "Installing Array Studio" 
+			WshShell.Run "cmd.exe /c start /min /wait %windir%\system32\msiexec.exe /i " & """" & "NETWORK\ArrayStudio\Newest\ArrayStudio_Installer.msi" & """" & "/qb ",0,True
+		</script>
+	</job>
+</package>
+		

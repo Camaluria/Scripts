@@ -1,0 +1,154 @@
+<package>
+	<job id="SoftwareInstallation">
+		<script language="VBScript" src="c:\program files\JNG\vbslibrary\library.vbs"/>
+		<script language="VBScript" src="c:\program file\JNG\vbslibrary\GETMTapps.vbs"/>
+		<script language="VBScript">
+		'***************************************************************************
+		' VBScript Source File -- SoftwareInstallation.wsf
+		' AUTHOR: Cameron Alexander
+		' DATE  : 03/10/2014
+		' COMMENT:
+		' v1.00 03/09/14  initial script; missing Thermo Foundation 2.0, Firefox, and mlims
+		' V2.00 04/22/14  Updated Script: Thermo Foundation 2.0, Xcalibur 2.2, Firefox, Mlims, Daemon Tools added
+		'****************************************************************************
+			Call instWshEnvironment
+			Call instWshShell
+			Call instoFS 
+			
+			err.clear
+			on error resume next
+			Set oFile = OFS.CreateTextFile("c:\windows\logs\SoftwareInstallation.log", True)
+			if Err.Number <> 0 Then
+			wscript.echo "Error Opening file"
+			on error goto 0
+			err.clear
+			end if
+			on error goto 0
+		
+			oFile.writeline "Metabolon, Inc. Unattended Software Installation"
+	
+			oFile.writeline "Installing Microsoft .NET Framework 1.1 sp1"
+			WshShell.Run "cmd.exe /c start /min /wait "NETWORK\dotnetfx\SP1\Q867460.EXE" /I /Q /L:%windir%\logs\dotnet1.log",0,True
+
+			oFile.writeline "Installing Microsoft .NET Framework 4"
+			WshShell.Run "cmd.exe /c start /min /wait "NETWORK\Dotnetfx4\framework_4_full.exe" /q /l "%windir%\logs\dotnet4.log"",0,True
+
+			oFile.writeline "Installing Dot Net Framework 4.5"
+			WshShell.Run """NETWORK\DotNetFx45\netframework45.exe"" && /norestart /q",0,True
+			
+			oFile.writeline "Installing Mozilla Firefox 24.0"
+			WshShell.Run """NETWORK\Firefox\Firefox_Setup.exe"" && -ms",0,True
+			
+			oFile.writeline "Installing Lync 2010"
+			WshShell.Run """NETWORK\Lync\LyncSetup_x86.exe""" & chr(34) & " /Install /Silent",0,True
+					
+			oFile.writeline "Installing Lync 2010 Patch"
+			WshShell.Run "cmd.exe /c start /min /wait %windir%\system32\msiexec.exe /i " & """" & "NETWORK\Lync\Lync.msp" & """" & " REBOOT=ReallySupress ALLUSERS=2 /qb /l*+ " & """" & "%windir%\logs\LyncPatch.log" & """",0,True
+			
+			oFile.writeline "Installing Lync Sign In Assistant"
+			WshShell.Run "cmd.exe /c start /min /wait %windir%\system32\msiexec.exe /i " & """" & "NETWORK\Lync\msoidcli_32.msi" & """" & " REBOOT=ReallySupress ALLUSERS=2 /qb /l*+ " & """" & "%windir%\logs\LyncSignIn.log" & """",0,True
+			
+			oFile.writeline "Installing Adobe Acrobat Reader 11.04"
+			WshShell.run """NETWORK\Adobe 1104\AdobeReader_Setup.exe""" & chr(34) & "/sPB /rps ALLUSERS=2 EULA_ACCEPT=YES /l*+"  & chr(34) & """%windir%\logs\AcroRead.log""" & chr(34) & "/qb-!",0,True
+	
+			oFile.writeline "Installing Flash Player 13 Active X"
+			WshShell.Run "cmd.exe /c start /min /wait %windir%\system32\msiexec.exe /i " & """" & "NETWORK\Flash13\flashplayer_13_activex.msi" & """" & " REBOOT=ReallySupress ALLUSERS=2 /qb /l*+ " & """" & "%windir%\logs\flash13activex.log" & """",0,True
+		
+			oFile.writeline "Installing Flash Player 13 Plugin" 
+			WshShell.Run "cmd.exe /c start /min /wait %windir%\system32\msiexec.exe /i " & """" & "NETWORK\Flash13\flashplayer_13_plugin.msi" & """" & " REBOOT=ReallySupress ALLUSERS=2 /qb /l*+ " & """" & "%windir%\logs\flash13plugin.log" & """",0,True
+
+			oFile.writeline "Installing Quicktime 7.7.5"
+			WshShell.Run """NETWORK\QuickTime 7\QuickTimeInstaller.exe"" /quiet",0,True		
+			
+			oFile.writeline "Installing QuickTime Apple Application Support" 
+			WshShell.Run "cmd.exe /c start /min /wait %windir%\system32\msiexec.exe /i " & """" & "NETWORK\QuickTime 7\AppleApplicationSupport.msi" & """" & " REBOOT=ReallySupress ALLUSERS=2 /qb ",0,True
+	
+			oFile.writeline "Installing 7zip"
+			WshShell.Run "cmd.exe /c start /min /wait %windir%\system32\msiexec.exe /i " & """" & "NETWORK\7zip\7z920-x32.MSI" & """" & " REBOOT=ReallySupress ALLUSERS=2 /qb /l*+ " & """" & "%windir%\logs\7z920-x32.log" & """",0,True
+
+			oFile.writeline "Installing TightVNC 2.7.10"
+			WshShell.Run "regedit.exe -s NETWORK\TightVNC\tightvnc_setting.reg",0,TRUE
+			WshShell.Run "cmd.exe /c start /min /wait %windir%\system32\msiexec.exe /i " & """" & "NETWORK\TightVNC\tightvnc-2.7.10-setup-32bit.msi" & """" & " REBOOT=ReallySupress ALLUSERS=2 /qb /l*+ " & """" & "%windir%\logs\tightvnc-2.7.10-setup-32bit.log" & """",0,True
+
+			oFile.Writeline "Installing Microsoft Security Essentials"
+			WshShell.Run "cmd.exe /c start /wait NETWORK\MSSECU~1\win7x32-mseinstall.exe" & " /s /runwgacheck ",0,TRUE
+	
+			oFile.writeline "Installing SUN Java JRE 7 Update 51"
+			WshShell.Run """NETWORK\java\java.exe "" /s /qn",0,TRUE
+
+			oFile.writeline "Installing Text2BMP Utility"
+			WshShell.Run "cmd.exe /c start /min /wait "%windir%\system32\msiexec.exe" /i "NETWORK\Text2BMP\Text2BMP.msi"  REBOOT=ReallySupress ALLUSERS=2 /qb /l*+ "%windir%\logs\Text2BMP.log" ",0,TRUE
+
+			oFile.writeline "Installing Shockwave Player 12"		
+			WshShell.Run """NETWORK\Shockwave Player\Shockwave_Installer.exe"" /S",0,True
+	
+			oFile.writeline "Installing Office 2007"
+			WshShell.Run "cmd.exe /c start /min /wait NETWORK\o2k7pro\Setup.exe " & "/adminfile  NETWORK\o2k7pro\META_O~1.MSP",0,True
+			
+			oFile.writeline "Installing Oracle 11g x86" 
+			WshShell.Run """NETWORK\Oracle\11.1.0.7_x86\setup.exe"" -nowelcome -silent -ignorePrereq -responseFile NETWORK\Oracle\11.1.0.7_x86\oracle11gTest.rsp",0,True
+			wscript.sleep 90000
+			WshShell.AppActivate ("Oracle Universal Installer")
+			WshShell.SendKeys "{ENTER}" 'close oracle installation cmd window
+			
+			oFile.writeline "Installing Fences"
+			WshShell.Run """NETWORK\Fences\Fences.exe"" && /S",0,True
+			
+			oFile.writeline "Installing Cisco VPN Client" 
+			OFS.CopyFile "NETWORK\VPN\VPN_Installer.msi", "C:\VPN_Installer.msi" 'Copy Cisco MSI File from Network to Temp. Cisco VPN will not install via script from a network drive
+			WshShell.Run "cmd.exe /c start /min /wait %windir%\system32\msiexec.exe /i " & """" & "C:\VPN_Installer.msi" & """" & " REBOOT=ReallySupress ALLUSERS=2 /qb /l*+ " & """" & "%windir%\logs\VPN.log" & """",0,True
+			oFile.writeline "Copying VPN Profile to C:"
+			OFS.CopyFile "NETWORK\VPN\Cisco\Meta\Cisco\MetaCisco_VPN.pcf", "C:\MetaCisco_Profile.pcf" 'Copy Cisco VPN Profile
+			OFS.DeleteFile "C:\VPN_Installer.msi" 'Delete MSI
+	
+			oFile.writeline "Installing Daemon Tools Lite" 
+			WshShell.Run """NETWORK\DTLite\DTLite.exe"" && /S /nogadget",0,True
+			wscript.sleep 30000
+			
+			oFile.writeline "Installing Array Studio" 
+			WshShell.Run "cmd.exe /c start /min /wait %windir%\system32\msiexec.exe /i " & """" & "NETWORK\ArrayStudio\Newest\ArrayStudio_Installer.msi" & """" & "/qb ",0,True
+			
+			oFile.writeline "Installing Barracuda Malware Removal Tool" 
+			WshShell.Run """NETWORK\Barracuda Malware Removal Tool\Barracuda_MR.exe"" && /Silent",0,True
+			
+			oFile.writeline "Installing Barracuda WSA" 
+			Wscript.Echo "Installing Barracuda WSA"
+			WshShell.Run "cmd.exe /c start /min /wait %windir%\system32\msiexec.exe /i " & """" & "NETWORK\Barracuda\BarracudaWSASetup.msi" & """" & " /S /qb ADS=0 ALLOW_REMOVE=0 ALLOW_UPDATE=1 SERVICE_URL=barracudawf.metabolon.com REBOOT=ReallySupress ALLUSERS=2""",0,True
+			
+			oFile.writeline "Installing Bullzip" 
+			WshShell.Run """NETWORK\Bullzip/Bullzip.exe"" && /Silent",0,True
+			
+			oFile.writeline "Installing ChemDraw 12.0" 
+			WshShell.Run "cmd.exe /c start /min /wait %windir%\system32\msiexec.exe /i " & """" & "NETWORK\ChemDraw\ChemDraw_12.0.msi" & """" & " REBOOT=ReallySupress ALLUSERS=2 /qb /l*+ " & """" & "%windir%\logs\chemdraw12.log" & """",0,True
+
+			oFile.writeline "Installing iTunes 11.5.1" 
+			WshShell.Run "cmd.exe /c start /min /wait %windir%\system32\msiexec.exe /i " & """" & "NETWORK\iTunes\ItunesTest.msi" & """" & "/qb ",0,True
+			WshShell.Run "cmd.exe /c start /min /wait %windir%\system32\msiexec.exe /i " & """" & "NETWORK\iTunes\AppleMobileDeviceSupport.msi" & """" & "/qb ",0,True
+			WshShell.Run "cmd.exe /c start /min /wait %windir%\system32\msiexec.exe /i " & """" & "NETWORK\iTunes\AppleApplicationSupport.msi" & """" & "/qb ",0,True
+			WshShell.Run "cmd.exe /c start /min /wait %windir%\system32\msiexec.exe /i " & """" & "NETWORK\iTunes\Bonjour.msi" & """" & "/qb ",0,True
+			
+			oFile.writeline "Installing Kace Agent" 
+			WshShell.Run """NETWORK\Kace Agent\Windows\KInstallerSetup.exe"" && -server=NETWORK -ssl_enabled=0 -amp_ssl=0 -display_mode=silent -clone_prep=true",0,True
+			
+			oFile.writeline "Installing MLIMs" 
+			WshShell.Run "cmd.exe /c start /min /wait %windir%\system32\msiexec.exe /i " & """" & "NETWORK\MLIMS\MLIMS_Installer.msi" & """" & " REBOOT=ReallySupress ALLUSERS=2 /qb""",0,True
+			
+			oFile.writeline "Installing R" 
+			WshShell.Run """NETWORK\R\R.exe"" && /Silent",0,True
+			
+			oFile.writeline "Installing Silverlight" 
+			WshShell.Run "cmd.exe /c start /min /wait %windir%\system32\msiexec.exe /i " & """" & "NETWORK\Silverlight\Silverlight.msi" & """" & " REBOOT=ReallySupress ALLUSERS=2 /qb""",0,True
+			
+			ofile.writeline "Installing Thermo Foundation 2.0"
+			Wshshell.Run "cscript /nologo "NETWORK\Xcalibur 2.2\foundation20.vbs"",0,True
+			
+			ofile.writeline "Installing Xcalibur 2.2"
+			Wshshell.Run "cscript /nologo "NETWORK\Xcalibur 2.2\Xcalibur22.vbs"",0,True
+			
+			ofile.writeline "Installing iLink UC Client"
+			Wshshell.Run "cscript /nologo "NETWORK\iLink\iLink.vbs"",0,True
+			
+	
+		</script>
+	</job>
+</package>

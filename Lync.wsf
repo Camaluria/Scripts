@@ -1,0 +1,42 @@
+'***************************************************************************
+' VBScript Source File --Lync.wsf
+' AUTHOR: Cameron Alexander
+' DATE  : 03/10/2014
+' COMMENT: Lync Comment Section
+' v1.00 03/09/14  initial script
+'****************************************************************************
+<package>
+	<job id="Lync">
+		<script language="VBScript" src="c:\program files\JNG\vbslibrary\library.vbs"/>
+		<script language="VBScript">
+			Call instWshShell
+			Call instoFS 
+		
+			
+			Set oFile = OFS.CreateTextFile("c:\windows\logs\Lync.log", True)
+			if Err.Number <> 0 Then
+				wscript.echo "Error Opening file"
+				on error goto 0
+				err.clear
+			end if
+			on error goto 0
+		
+	
+			'insert Software installation here
+			oFile.writeline "Installing Lync 2010"
+			Wscript.Echo "Installing Lync 2010"
+			WshShell.Run """NETWORK\Lync\LyncSetup_x86.exe""" & chr(34) & " /Install /Silent",0,True
+			oFile.writeline "Lync 2010 Installed"
+			
+			oFile.writeline "Installing Lync 2010 Patch"
+			Wscript.Echo "Installing Lync 2010 Patch"
+			WshShell.Run "cmd.exe /c start /min /wait %windir%\system32\msiexec.exe /i " & """" & "NETWORK\Lync\Lync.msp" & """" & " REBOOT=ReallySupress ALLUSERS=2 /qb /l*+ " & """" & "%windir%\logs\LyncPatch.log" & """",0,True
+			oFile.writeline "Lync 2010 Patch Installed"
+			
+			oFile.writeline "Installing Lync Sign In Assistant"
+			WshShell.Run "cmd.exe /c start /min /wait %windir%\system32\msiexec.exe /i " & """" & "NETWORK\Lync\msoidcli_32.msi" & """" & " REBOOT=ReallySupress ALLUSERS=2 /qb /l*+ " & """" & "%windir%\logs\LyncSignIn.log" & """",0,True
+			oFile.writeline "Lync 2010 Sign In Installed"
+		</script>
+	</job>
+</package>
+		

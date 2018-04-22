@@ -1,0 +1,37 @@
+'***************************************************************************
+' VBScript Source File --Quicktime775.wsf
+' AUTHOR: Cameron Alexander
+' DATE  : 03/10/2014
+' COMMENT: Quicktime775 Comment Section
+' v1.00 03/09/14  initial script
+'****************************************************************************
+<package>
+	<job id="Quicktime775">
+		<script language="VBScript" src="c:\program files\JNG\vbslibrary\library.vbs"/>
+		<script language="VBScript">
+			Call instWshShell
+			Call instoFS 
+		
+			
+			Set oFile = OFS.CreateTextFile("c:\windows\logs\Quicktime775.log", True)
+			if Err.Number <> 0 Then
+				wscript.echo "Error Opening file"
+				on error goto 0
+				err.clear
+			end if
+			on error goto 0
+		
+	
+			'insert Software installation here
+			oFile.writeline "Installing Quicktime 7.7.5"
+			Wscript.Echo "Installing Quicktime 7.7.5"
+			WshShell.Run """s:\Core\QuickTime 7\QuickTimeInstaller.exe"" /quiet",0,True		
+			Wscript.Echo "Install Finished"
+			
+			oFile.writeline "Installing QuickTime Apple Application Support" 
+			WshShell.Run "cmd.exe /c start /min /wait %windir%\system32\msiexec.exe /i " & """" & NETWORK\QuickTime 7\AppleApplicationSupport.msi" & """" & " REBOOT=ReallySupress ALLUSERS=2 /qb ",0,True
+	
+		</script>
+	</job>
+</package>
+		

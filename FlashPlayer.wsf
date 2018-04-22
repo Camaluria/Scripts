@@ -1,0 +1,37 @@
+'***************************************************************************
+' VBScript Source File --FlashPlayer.wsf
+' AUTHOR: Cameron Alexander
+' DATE  : 03/10/2014
+' COMMENT: FlashPlayer Comment Section
+' v1.00 03/09/14  initial script
+'****************************************************************************
+<package>
+	<job id="FlashActivex">
+		<script language="VBScript" src="c:\program files\JNG\vbslibrary\library.vbs"/>
+		<script language="VBScript">
+			Call instWshShell
+			Call instoFS 
+		
+			
+			Set oFile = OFS.CreateTextFile("c:\windows\logs\FlashActivex.log", True)
+			if Err.Number <> 0 Then
+				wscript.echo "Error Opening file"
+				on error goto 0
+				err.clear
+			end if
+			on error goto 0
+		
+	
+		'insert Software Installation here
+		oFile.writeline "Installing Flash Player 13 Active X"
+		Wscript.Echo "Installing Flash Player 13 Active X"
+		WshShell.Run "cmd.exe /c start /min /wait %windir%\system32\msiexec.exe /i " & """" & "NETWORK\Flash13\flashplayer_13_activex.msi" & """" & " REBOOT=ReallySupress ALLUSERS=2 /qb /l*+ " & """" & "%windir%\logs\flash13activex.log" & """",0,True
+		
+		oFile.writeline "Installing Flash Player 13 Plugin" 
+		Wscript.Echo "Installing Flash Player 13 Plugin"
+	    WshShell.Run "cmd.exe /c start /min /wait %windir%\system32\msiexec.exe /i " & """" & "NETWORK\Flash13\flashplayer_13_plugin.msi" & """" & " REBOOT=ReallySupress ALLUSERS=2 /qb /l*+ " & """" & "%windir%\logs\flash13plugin.log" & """",0,True
+
+		</script>
+	</job>
+</package>
+		

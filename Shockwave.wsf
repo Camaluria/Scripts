@@ -1,0 +1,34 @@
+'***************************************************************************
+' VBScript Source File --Shockwave.wsf
+' AUTHOR: Cameron Alexander
+' DATE  : 03/10/2014
+' COMMENT: Shockwave Comment Section
+' v1.00 03/09/14  initial script
+'****************************************************************************
+<package>
+	<job id="Shockwave">
+		<script language="VBScript" src="c:\program files\JNG\vbslibrary\library.vbs"/>
+		<script language="VBScript">
+			Call instWshShell
+			Call instoFS 
+		
+			
+			Set oFile = OFS.CreateTextFile("c:\windows\logs\Shockwave.log", True)
+			if Err.Number <> 0 Then
+				wscript.echo "Error Opening file"
+				on error goto 0
+				err.clear
+			end if
+			on error goto 0
+		
+	
+			'insert Software installation here
+			oFile.writeline "Installing Shockwave Player"
+			Wscript.Echo "Installing Shockwave Player"
+			WshShell.Run """NETWORK\Shockwave Player\Shockwave_Installer.exe"" /S",0,True
+		
+	
+		</script>
+	</job>
+</package>
+		

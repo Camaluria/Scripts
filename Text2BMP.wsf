@@ -1,0 +1,33 @@
+'***************************************************************************
+' VBScript Source File --Text2BMP.wsf
+' AUTHOR: Cameron Alexander
+' DATE  : 03/10/2014
+' COMMENT: Text2BMP Comment Section
+' v1.00 03/09/14  initial script
+'****************************************************************************
+<package>
+	<job id="Text2BMP">
+		<script language="VBScript" src="c:\program files\JNG\vbslibrary\library.vbs"/>
+		<script language="VBScript">
+			Call instWshShell
+			Call instoFS 
+		
+			Option Explicit
+			'Set oFile = OFS.CreateTextFile("c:\windows\logs\Text2BMP.log", True)
+			if Err.Number <> 0 Then
+				wscript.echo "Error Opening file"
+				on error goto 0
+				err.clear
+			end if
+			on error goto 0
+		
+	
+			'insert Software installation here
+			oFile.writeline "Installing Text2BMP Utility"
+			WshShell.Run "cmd.exe /c start /min /wait "%windir%\system32\msiexec.exe" /i "NETWORK\Text2BMP\Text2BMP.msi"  REBOOT=ReallySupress ALLUSERS=2 /qb /l*+ "%windir%\logs\Text2BMP.log" ",0,TRUE
+
+		</script>
+	</job>
+</package>
+					
+			

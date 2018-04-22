@@ -1,0 +1,34 @@
+'***************************************************************************
+' VBScript Source File --Office2007.wsf
+' AUTHOR: Cameron Alexander
+' DATE  : 03/10/2014
+' COMMENT: Office2007 Comment Section
+' v1.00 03/09/14  initial script
+'****************************************************************************
+<package>
+	<job id="Office2007">
+		<script language="VBScript" src="c:\program files\JNG\vbslibrary\library.vbs"/>
+		<script language="VBScript">
+			Call instWshShell
+			Call instoFS 
+		
+			
+			Set oFile = OFS.CreateTextFile("c:\windows\logs\Office2007.log", True)
+			if Err.Number <> 0 Then
+				wscript.echo "Error Opening file"
+				on error goto 0
+				err.clear
+			end if
+			on error goto 0
+		
+	
+			'insert Software installation here
+			oFile.writeline "Installing Office 2007"
+			Wscript.Echo "Installing Office 2007"
+			WshShell.Run "cmd.exe /c start /min /wait NETWORK\o2k7pro\Setup.exe " & "/adminfile  S:\core\o2k7pro\META_O~1.MSP",0,True
+		</script>
+	</job>
+</package>
+		
+	
+			
